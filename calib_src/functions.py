@@ -29,14 +29,14 @@ def calibrate_random_sampling(n_samples):
     """Run random sampling calibration with the specified prior ranges and log-likelihood function."""
     calib = CalibrationRandomSampling(prior_ranges=sets.PRIOR_RANGE)
     calib.run(log_likelihood_func=log_likelihood_func, num_samples=n_samples)
-    calib.save_samples(file_name="../output/samples_random.csv")
+    calib.save_samples(file_name="output/samples_random.csv")
 
 
 def calibrate_mcmc(n_samples, std_factor):
     """Run MCMC sampling calibration with the specified prior ranges and log-likelihood function."""
     calib = CalibrationMCMCSampling(prior_ranges=sets.PRIOR_RANGE)
     calib.run(log_likelihood_func=log_likelihood_func, std_factor=std_factor, num_samples=n_samples)
-    calib.save_samples(file_name="../output/samples_mcmc.csv")
+    calib.save_samples(file_name="output/samples_mcmc.csv")
 
 
 def plot_posterior(method, n_resamples, weighted=True):
@@ -44,14 +44,14 @@ def plot_posterior(method, n_resamples, weighted=True):
 
     if method == 'random':
         calib = CalibrationRandomSampling(prior_ranges=sets.PRIOR_RANGE)
-        calib.read_samples(file_name="../output/samples_random.csv")
+        calib.read_samples(file_name="output/samples_random.csv")
         calib.plot_posterior(
             n_resample=n_resamples, weighted=weighted, figsize=(5, 5),
             file_name='figs/calibration/{}_postr.png'.format(method))
 
     elif method == 'mcmc':
         calib = CalibrationMCMCSampling(prior_ranges=sets.PRIOR_RANGE)
-        calib.read_samples(file_name="../output/samples_mcmc.csv")
+        calib.read_samples(file_name="output/samples_mcmc.csv")
         calib.plot_posterior(
             n_warmup = int(0.1*n_resamples), figsize=(5, 5), parameter_names=['Mortality Probability'],
             file_name='figs/calibration/{}_postr.png'.format(method))
@@ -63,7 +63,7 @@ def plot_posterior(method, n_resamples, weighted=True):
 def plot_mcmc_trace():
     """ plot the trace of the MCMC sampling """
     calib = CalibrationMCMCSampling(prior_ranges=sets.PRIOR_RANGE)
-    calib.read_samples(file_name="../output/samples_mcmc.csv")
+    calib.read_samples(file_name="output/samples_mcmc.csv")
     calib.plot_trace(
-        figsize=(5, 5), file_name='../figs/calibration/mcmc_trace.png',
+        figsize=(5, 5), file_name='figs/calibration/mcmc_trace.png',
         moving_ave_window=int(0.1 * sets.N_SAMPLES))

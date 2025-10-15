@@ -1,8 +1,8 @@
 # Lab: Calibration
 
 This repository uses:
-- [Lab_SurvivalModel](https://github.com/HPM573/Lab_SurvivalModel)
-- [Lab_MultiSurvivalModel](https://github.com/HPM573/Lab_MultiSurvivalModel)
+- [lab-survival-model](https://github.com/HPM573/Lab_SurvivalModel)
+- [lab-multi-survival-model](https://github.com/HPM573/Lab_MultiSurvivalModel)
 
 To run the code in this repository, the paths to the dependent 
 repositories on your computer should be included 
