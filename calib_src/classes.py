@@ -1,14 +1,17 @@
 import MultiSurvivalModelClasses as SurvivalCls
 import calib_sets as sets
 from deampy.calibration import CalibrationRandomSampling, CalibrationMCMCSampling
+import numpy as np
 
 
 class CalibratedModel:
     """ to run the calibrated survival model """
 
-    def __init__(self, calib_method, drug_effectiveness_ratio=1):
+    def __init__(self, calib_method, samples_csv_filename=None,  drug_effectiveness_ratio=1):
         """ extracts seeds, mortality probabilities and the associated likelihood from
         the csv file where the calibration results are stored
+        :param calib_method: (string) 'random' or 'mcmc'
+        :param samples_csv_filename: (string) name of the csv file containing parameter samples
         :param drug_effectiveness_ratio: effectiveness of the drug
         """
 
@@ -21,7 +24,8 @@ class CalibratedModel:
         else:
             raise ValueError("Unknown calibration method: {}".format(calib_method))
 
-        self.calib.read_samples(file_name="output/samples_{}.csv".format(calib_method))
+        file_name = "output/samples_{}.csv".format(calib_method) if samples_csv_filename is None else samples_csv_filename
+        self.calib.read_samples(file_name=file_name)
 
         self.multiCohorts = None  # multi-cohort
 
@@ -42,7 +46,7 @@ class CalibratedModel:
             self.multiCohorts = SurvivalCls.MultiCohort(
                 ids=range(num_of_simulated_cohorts),
                 pop_sizes=[cohort_size] * num_of_simulated_cohorts,
-                mortality_probs=self.calib.resamples['Mortality Probability'] * self.drugEffRatio)
+                mortality_probs= np.array(self.calib.resamples['Mortality Probability']) * self.drugEffRatio)
 
         elif isinstance(self.calib, CalibrationMCMCSampling):
 
@@ -52,7 +56,8 @@ class CalibratedModel:
             self.multiCohorts = SurvivalCls.MultiCohort(
                 ids=range(num_of_simulated_cohorts),
                 pop_sizes=[cohort_size] * num_of_simulated_cohorts,
-                mortality_probs=self.calib.samples['Mortality Probability'][-num_of_simulated_cohorts:] * self.drugEffRatio)
+                mortality_probs=np.array(self.calib.samples['Mortality Probability'][-num_of_simulated_cohorts:])
+                                * self.drugEffRatio)
         else:
             raise ValueError("Unknown calibration method: {}".format(self.calib))
 
